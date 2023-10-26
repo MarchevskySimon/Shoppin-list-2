@@ -2,18 +2,14 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
-    path: "",
+    path: "/",
     name: "Shopping List - List",
-    component: () =>
-      import("@/plugins/lib@shopping-list/shopping-lists/shopping-lists.vue"),
+    component: () => import("@/plugin/shopping-list/list/the-lists.vue"),
   },
   {
-    path: "",
+    path: "/list",
     name: "Shopping List - Detail",
-    component: () =>
-      import(
-        "@/plugins/lib@shopping-list/shopping-list-detail/shopping-list-detail.vue"
-      ),
+    component: () => import("@/plugin/shopping-list/detail/list-detail.vue"),
   },
   {
     path: "/:catchAll(.*)",

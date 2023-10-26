@@ -1,5 +1,5 @@
 <template>
   <main>
-    <h1>404 Not found</h1>
+    <h1>Hello</h1>
   </main>
 </template>
