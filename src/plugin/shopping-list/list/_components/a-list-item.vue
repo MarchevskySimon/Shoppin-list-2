@@ -21,8 +21,6 @@
 </template>
 
 <script>
-// import { ref } from "vue";
-// import { data } from "@/data.js";
 import axios from "axios";
 
 export default {
@@ -31,40 +29,19 @@ export default {
       shoppingLists: null,
     };
   },
-
   async mounted() {
     try {
-      // const response = await axios.get('https://shoppinglist.wezeo.dev/shoppinglist/lists')
-      // const data = response.data.data
-
-      // Skrateny zapis zakomentovaneho kodu vyssie, kde vytiahneme data pomocou destrukcie objektu
-      const {
-        data: { data: shoppingLists },
-      } = await axios.get("/api/v1/shopping-lists");
-      this.shoppingLists = shoppingLists;
+      const response = await axios.get("/api/v1/shopping-lists");
+      const shoppingListsData = response.data.data;
+      this.shoppingLists = shoppingListsData;
+      // console.log(shoppingListsData);
     } catch (error) {
       console.error("Error:", error);
       this.shoppingLists = { error };
     }
+    console.log(this.shoppingLists[0].id);
   },
 };
-
-// export default {
-//   setup() {
-//     const listData = ref("");
-
-//     axios
-//       .get("https://shoppinglist.wezeo.dev/shoppinglist/lists")
-//       .then((response) => {
-//         listData.value = response;
-//       });
-//     console.log(listData);
-
-//     return {
-//       listData,
-//     };
-//   },
-// };
 </script>
 
 <style lang="scss" scoped></style>

@@ -2,10 +2,12 @@
   <div>
     <h3>{{ thisList.title }}</h3>
     <ul>
-      <li v-for="(item, index) in thisList.polozky" :key="index">
-        {{ item }}
+      <li v-for="item in thisList.items" :key="item.id">
+        {{ item.name }} - {{ item.value }}
       </li>
     </ul>
+
+    <hr />
 
     <RouterLink to="/">HOME</RouterLink>
   </div>
@@ -13,17 +15,34 @@
 
 <script>
 import { useRoute } from "vue-router";
-import { ref } from "vue";
-import { data } from "@/data.js";
+import axios from "axios";
 
 export default {
-  setup() {
-    const route = useRoute();
-    const thisList = ref(data).value[route.params.id - 1];
-
+  data() {
     return {
-      thisList,
+      thisList: "",
     };
+  },
+
+  beforeMount() {
+    this.route = useRoute();
+  },
+
+  async mounted() {
+    try {
+      const response = await axios.get("/api/v1/shopping-lists");
+      this.shoppingLists = response.data.data;
+    } catch (error) {
+      console.error("Error:", error);
+      this.shoppingLists = { error };
+    }
+
+    for (let i = 0; i < this.shoppingLists.length; i++) {
+      if (this.shoppingLists[i].id === parseInt(this.route.params.id)) {
+        this.thisList = this.shoppingLists[i];
+      }
+    }
+    console.log(this.thisList.items);
   },
 };
 </script>
