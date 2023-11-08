@@ -32,6 +32,7 @@ export default {
   async mounted() {
     try {
       const response = await axios.get("/api/v1/shopping-lists");
+      console.log(response.data);
       const shoppingListsData = response.data.data;
       this.shoppingLists = shoppingListsData;
       // console.log(shoppingListsData);
@@ -39,7 +40,7 @@ export default {
       console.error("Error:", error);
       this.shoppingLists = { error };
     }
-    console.log(this.shoppingLists[0].id);
+    // console.log(this.shoppingLists[0].id);
   },
 };
 </script>
