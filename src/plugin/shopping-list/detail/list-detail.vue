@@ -1,34 +1,32 @@
 <template>
   <div>
-    <h3>{{ thisList.title }}</h3>
-
     <form @submit.prevent="addToList()">
       <input type="text" v-model="name" />
       <br />
-      <button type="submit">ADD NEW</button>
+      <button type="submit" @click="forceRerender()">ADD NEW</button>
     </form>
 
-    <ul>
-      <li v-for="item in thisList.items" :key="item.id">
-        {{ item.name }} - {{ item.value }}
-      </li>
-    </ul>
+    <AllItems v-if="renderComponent" />
 
+    <RouterLink to="/" @click="deleteList()">DELETE</RouterLink>
     <hr />
-
     <RouterLink to="/">HOME</RouterLink>
   </div>
 </template>
 
 <script>
+import AllItems from "@/plugin/shopping-list/detail/_components/a-shopping-list-item.vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 
 export default {
+  components: {
+    AllItems,
+  },
   data() {
     return {
-      thisList: "",
       name: "",
+      renderComponent: true,
     };
   },
 
@@ -36,29 +34,40 @@ export default {
     this.route = useRoute();
   },
 
-  async mounted() {
-    try {
-      const response = await axios.get("/api/v1/shopping-lists");
-      this.shoppingLists = response.data.data;
-    } catch (error) {
-      console.error("Error:", error);
-      this.shoppingLists = { error };
-    }
-
-    for (let i = 0; i < this.shoppingLists.length; i++) {
-      if (this.shoppingLists[i].id === parseInt(this.route.params.id)) {
-        this.thisList = this.shoppingLists[i];
-        console.log(this.thisList.items);
-      }
-    }
-  },
   methods: {
     addToList() {
       axios
-        .post("/api/v1/shopping-lists/", { name: this.name })
+        .post("/api/v1/shopping-lists/" + this.route.params.id + "/items", {
+          name: this.name,
+          value: "1",
+          unit: "piece",
+          is_checked: false,
+        })
         .then(function response(e) {
           console.log(e);
+        })
+        .catch(function (error) {
+          console.log(error);
         });
+
+      this.name = "";
+    },
+
+    deleteList() {
+      axios
+        .delete("/api/v1/shopping-lists/" + this.route.params.id)
+        .then(function response(e) {
+          console.log(e);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    async forceRerender() {
+      this.renderComponent = false;
+      await this.$nextTick();
+      this.renderComponent = true;
     },
   },
 };

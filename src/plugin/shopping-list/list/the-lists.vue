@@ -3,11 +3,10 @@
     <h1>LISTS</h1>
     <form @submit.prevent="addToDatabase()">
       <input type="text" v-model="titleName" placeholder="Name" />
-      <br />
-      <input type="text" v-model="item" placeholder="item" />
-      <button type="submit">ADD NEW</button>
+      <button type="submit" @click="forceRerender()">ADD NEW</button>
     </form>
-    <ListItem />
+
+    <ListItem v-if="renderComponent" />
   </main>
 </template>
 
@@ -22,7 +21,7 @@ export default {
   data() {
     return {
       titleName: "",
-      item: "",
+      renderComponent: true,
     };
   },
   methods: {
@@ -30,7 +29,6 @@ export default {
       axios
         .post("/api/v1/shopping-lists", {
           title: this.titleName,
-          items: [this.item],
         })
         .then(function respose(e) {
           console.log(e);
@@ -38,6 +36,14 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+
+      this.titleName = "";
+    },
+
+    async forceRerender() {
+      this.renderComponent = false;
+      await this.$nextTick();
+      this.renderComponent = true;
     },
   },
 };
