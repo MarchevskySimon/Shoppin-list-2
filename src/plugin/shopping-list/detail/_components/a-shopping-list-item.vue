@@ -4,6 +4,11 @@
 
     <ul>
       <li v-for="item in thisList.items" :key="item.id">
+        <input
+          type="checkbox"
+          :checked="item.is_checked"
+          @change="isChecked(item, item.id)"
+        />
         {{ item.name }} - {{ item.value }}
       </li>
     </ul>
@@ -40,6 +45,34 @@ export default {
         console.log(this.thisList.items);
       }
     }
+  },
+
+  methods: {
+    async isChecked(currentItem, itemID) {
+      try {
+        if (currentItem.is_checked === true) {
+          const response = await axios.put(
+            "/api/v1/shopping-lists/" +
+              this.route.params.id +
+              "/items/" +
+              itemID,
+            { is_checked: false }
+          );
+          console.log(response);
+        } else {
+          const response = await axios.put(
+            "/api/v1/shopping-lists/" +
+              this.route.params.id +
+              "/items/" +
+              itemID,
+            { is_checked: true }
+          );
+          console.log(response);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
   },
 };
 </script>

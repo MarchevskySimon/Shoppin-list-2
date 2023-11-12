@@ -35,33 +35,33 @@ export default {
   },
 
   methods: {
-    addToList() {
-      axios
-        .post("/api/v1/shopping-lists/" + this.route.params.id + "/items", {
-          name: this.name,
-          value: "1",
-          unit: "piece",
-          is_checked: false,
-        })
-        .then(function response(e) {
-          console.log(e);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
+    async addToList() {
+      try {
+        const response = await axios.post(
+          "/api/v1/shopping-lists/" + this.route.params.id + "/items",
+          {
+            name: this.name,
+            value: "1",
+            unit: "piece",
+            is_checked: false,
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error:", error);
+      }
       this.name = "";
     },
 
-    deleteList() {
-      axios
-        .delete("/api/v1/shopping-lists/" + this.route.params.id)
-        .then(function response(e) {
-          console.log(e);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    async deleteList() {
+      try {
+        const response = await axios.delete(
+          "/api/v1/shopping-lists/" + this.route.params.id
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error:", error);
+      }
     },
 
     async forceRerender() {

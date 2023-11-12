@@ -3,7 +3,7 @@
     <h1>LISTS</h1>
     <form @submit.prevent="addToDatabase()">
       <input type="text" v-model="titleName" placeholder="Name" />
-      <button type="submit" @click="forceRerender()">ADD NEW</button>
+      <button type="submit" @click="forceRerender">ADD NEW</button>
     </form>
 
     <ListItem v-if="renderComponent" />
@@ -25,18 +25,15 @@ export default {
     };
   },
   methods: {
-    addToDatabase() {
-      axios
-        .post("/api/v1/shopping-lists", {
+    async addToDatabase() {
+      try {
+        const response = axios.post("/api/v1/shopping-lists", {
           title: this.titleName,
-        })
-        .then(function respose(e) {
-          console.log(e);
-        })
-        .catch(function (error) {
-          console.log(error);
         });
-
+        console.log(response);
+      } catch (error) {
+        console.error("Error:", error);
+      }
       this.titleName = "";
     },
 
