@@ -9,7 +9,18 @@
           :checked="item.is_checked"
           @change="isChecked(item, item.id)"
         />
-        {{ item.name }} - {{ item.value }}
+        {{ item.name + " - " + item.value + " " + item.unit }}
+        <!-- Form to UNITS -->
+        <form @submit.prevent="chooseUnit(item.id)">
+          <label>UNITS :</label>
+          <br />
+          <select v-model="unitType">
+            <option v-for="option in options" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+          <button>CONFIRM</button>
+        </form>
       </li>
     </ul>
   </div>
@@ -23,6 +34,8 @@ export default {
   data() {
     return {
       thisList: "",
+      unitType: "",
+      options: ["kg", "piece", "pack"],
     };
   },
 
@@ -48,6 +61,18 @@ export default {
   },
 
   methods: {
+    async chooseUnit(itemID) {
+      try {
+        const response = axios.put(
+          "/api/v1/shopping-lists/" + this.route.params.id + "/items/" + itemID,
+          { unit: this.unitType }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+
     async isChecked(currentItem, itemID) {
       try {
         if (currentItem.is_checked === true) {

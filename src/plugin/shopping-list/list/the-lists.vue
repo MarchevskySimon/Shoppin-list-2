@@ -6,7 +6,7 @@
       <button type="submit" @click="forceRerender">ADD NEW</button>
     </form>
 
-    <ListItem v-if="renderComponent" />
+    <ListItem :key="componentKey" />
   </main>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       titleName: "",
-      renderComponent: true,
+      componentKey: 0,
     };
   },
   methods: {
@@ -38,9 +38,7 @@ export default {
     },
 
     async forceRerender() {
-      this.renderComponent = false;
-      await this.$nextTick();
-      this.renderComponent = true;
+      this.componentKey += 1;
     },
   },
 };

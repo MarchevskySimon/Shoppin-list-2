@@ -6,8 +6,8 @@
       <button type="submit" @click="forceRerender()">ADD NEW</button>
     </form>
 
-    <AllItems v-if="renderComponent" />
-
+    <AllItems :key="componentKey" />
+    <br />
     <RouterLink to="/" @click="deleteList()">DELETE</RouterLink>
     <hr />
     <RouterLink to="/">HOME</RouterLink>
@@ -26,7 +26,8 @@ export default {
   data() {
     return {
       name: "",
-      renderComponent: true,
+      unit: "",
+      componentKey: 0,
     };
   },
 
@@ -64,10 +65,19 @@ export default {
       }
     },
 
+    async chooseUnit(itemID) {
+      try {
+        const response = axios.put(
+          "/api/v1/shopping-lists/" + this.route.params.id + "/items/" + itemID
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+
     async forceRerender() {
-      this.renderComponent = false;
-      await this.$nextTick();
-      this.renderComponent = true;
+      this.componentKey += 1;
     },
   },
 };
