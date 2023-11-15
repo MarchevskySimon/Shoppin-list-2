@@ -9,20 +9,26 @@
           :checked="item.is_checked"
           @change="isChecked(item, item.id)"
         />
-        {{ item.name + " - " + item.value + " " + item.unit }}
-        <!-- Form to UNITS -->
-        <form @submit.prevent="chooseUnit(item.id)">
-          <label>UNITS :</label>
-          <br />
-          <select v-model="unitType">
-            <option v-for="option in options" :key="option" :value="option">
-              {{ option }}
-            </option>
-          </select>
-          <button>CONFIRM</button>
-        </form>
+        <span @click="showHide(), (itemID = item.id)">{{
+          item.name + " - " + item.value + " " + item.unit
+        }}</span>
       </li>
     </ul>
+
+    <div v-if="option1">
+      <!-- Form to UNITS -->
+      <form @submit.prevent="chooseUnit()">
+        <label>UNITS :</label>
+        <br />
+        <select v-model="unitType">
+          <option v-for="option in options" :key="option" :value="option">
+            {{ option }}
+          </option>
+        </select>
+        <button>CONFIRM</button>
+      </form>
+      <span @click="option1 = false">X</span>
+    </div>
   </div>
 </template>
 
@@ -34,8 +40,10 @@ export default {
   data() {
     return {
       thisList: "",
+      itemID: "",
       unitType: "",
       options: ["kg", "piece", "pack"],
+      option1: false,
     };
   },
 
@@ -61,10 +69,13 @@ export default {
   },
 
   methods: {
-    async chooseUnit(itemID) {
+    async chooseUnit() {
       try {
         const response = axios.put(
-          "/api/v1/shopping-lists/" + this.route.params.id + "/items/" + itemID,
+          "/api/v1/shopping-lists/" +
+            this.route.params.id +
+            "/items/" +
+            this.itemID,
           { unit: this.unitType }
         );
         console.log(response);
@@ -98,8 +109,17 @@ export default {
         console.error("Error:", error);
       }
     },
+
+    // SHOW AND HIDE
+    showHide() {
+      this.option1 = !this.option1;
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+li span:hover {
+  cursor: pointer;
+}
+</style>
