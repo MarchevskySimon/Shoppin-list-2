@@ -17,7 +17,13 @@
 
     <div v-if="option1">
       <!-- Form to UNITS -->
-      <form @submit.prevent="chooseUnit()">
+      <span @click="option1 = false">X</span>
+      <form
+        @submit.prevent="
+          chooseUnit();
+          $emit('rerenderEvent');
+        "
+      >
         <label>UNITS :</label>
         <br />
         <select v-model="unitType">
@@ -25,9 +31,8 @@
             {{ option }}
           </option>
         </select>
-        <button>CONFIRM</button>
+        <button type="submit">CONFIRM</button>
       </form>
-      <span @click="option1 = false">X</span>
     </div>
   </div>
 </template>
@@ -41,7 +46,7 @@ export default {
     return {
       thisList: "",
       itemID: "",
-      unitType: "",
+      unitType: "kg",
       options: ["kg", "piece", "pack"],
       option1: false,
     };

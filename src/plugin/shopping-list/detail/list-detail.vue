@@ -6,7 +6,7 @@
       <button type="submit" @click="forceRerender()">ADD NEW</button>
     </form>
 
-    <AllItems :key="componentKey" />
+    <AllItems :key="componentKey" @rerender-event="forceRerender()" />
     <br />
     <RouterLink to="/" @click="deleteList()">DELETE</RouterLink>
     <hr />
@@ -26,7 +26,6 @@ export default {
   data() {
     return {
       name: "",
-      unit: "",
       componentKey: 0,
     };
   },
@@ -58,17 +57,6 @@ export default {
       try {
         const response = await axios.delete(
           "/api/v1/shopping-lists/" + this.route.params.id
-        );
-        console.log(response);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-
-    async chooseUnit(itemID) {
-      try {
-        const response = axios.put(
-          "/api/v1/shopping-lists/" + this.route.params.id + "/items/" + itemID
         );
         console.log(response);
       } catch (error) {
