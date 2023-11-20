@@ -1,12 +1,16 @@
 <template>
-  <div>
+  <main class="container">
+    <h2>Lists</h2>
     <section v-for="list in shoppingLists" :key="list.id">
-      <RouterLink :to="`/list/${list.id}`">{{ list.title }}</RouterLink>
+      <RouterLink
+        class="link"
+        :to="`/list/${list.id}`"
+        @click="$emit('rerenderItems')"
+        >{{ list.title }}</RouterLink
+      >
     </section>
 
-    <h1>Lists</h1>
-
-    <template v-if="!shoppingLists">
+    <!-- <template v-if="!shoppingLists">
       <p>Načítavam dáta</p>
     </template>
 
@@ -16,8 +20,8 @@
 
     <template v-else>
       Počet položiek v zozname: {{ shoppingLists.length }}
-    </template>
-  </div>
+    </template> -->
+  </main>
 </template>
 
 <script>
@@ -35,14 +39,12 @@ export default {
       console.log(response.data);
       const shoppingListsData = response.data.data;
       this.shoppingLists = shoppingListsData;
-      // console.log(shoppingListsData);
     } catch (error) {
       console.error("Error:", error);
       this.shoppingLists = { error };
     }
-    // console.log(this.shoppingLists[0].id);
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped></style>

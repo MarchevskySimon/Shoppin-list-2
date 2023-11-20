@@ -1,39 +1,77 @@
 <template>
   <div>
-    <h3>{{ thisList.title }}</h3>
-
-    <ul>
-      <li v-for="item in thisList.items" :key="item.id">
-        <input
-          type="checkbox"
-          :checked="item.is_checked"
-          @change="isChecked(item, item.id)"
-        />
-        <span @click="showHide(), (itemID = item.id)">{{
-          item.name + " - " + item.value + " " + item.unit
-        }}</span>
-      </li>
-    </ul>
-
-    <div v-if="option1">
-      <!-- Form to UNITS -->
-      <span @click="option1 = false">X</span>
-      <form
-        @submit.prevent="
-          chooseUnit();
-          $emit('rerenderEvent');
-        "
-      >
-        <label>UNITS :</label>
-        <br />
-        <select v-model="unitType">
-          <option v-for="option in options" :key="option" :value="option">
-            {{ option }}
-          </option>
-        </select>
-        <button type="submit">CONFIRM</button>
-      </form>
+    <div class="homeLink">
+      <RouterLink to="/">
+        <img src="../../../../../public/arrow.svg" alt="Arrow"
+      /></RouterLink>
+      <h3>{{ thisList.title }}</h3>
+      <RouterLink to="/" @click="$emit('deleteList')" class="deleteLink"
+        ><img src="../../../../../public/trash.svg" alt="Delete"
+      /></RouterLink>
     </div>
+
+    <main class="container">
+      <ul>
+        <li v-for="item in thisList.items" :key="item.id">
+          <span class="singleItem">
+            <span>
+              <input
+                type="checkbox"
+                :checked="item.is_checked"
+                @change="isChecked(item, item.id)"
+              />
+
+              <span>{{ item.name }}</span>
+            </span>
+            <span>
+              <span
+                class="unit"
+                @click="
+                  showHide(item.value, item.unit);
+                  usedItem = item;
+                "
+                >{{ item.value + " " + item.unit }}
+              </span>
+
+              <button
+                class="button dellItem"
+                @click="
+                  usedItem = item;
+                  del();
+                "
+              >
+                X
+              </button>
+            </span>
+          </span>
+        </li>
+      </ul>
+
+      <div v-if="option1" class="darker"></div>
+      <div v-if="option1" class="hidenForm">
+        <!-- Form to UNITS -->
+        <form @submit.prevent="chooseUnit()">
+          <div class="buttonsContainer">
+            <button class="button" type="submit">CONFIRM</button>
+            <span class="button" @click="option1 = false">CANCEL</span>
+          </div>
+          <select v-model="value">
+            <option
+              v-for="number in howManyOptions"
+              :key="number"
+              :value="number"
+            >
+              {{ number }}
+            </option>
+          </select>
+          <select v-model="unit">
+            <option v-for="option in options" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+        </form>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -45,9 +83,14 @@ export default {
   data() {
     return {
       thisList: "",
-      itemID: "",
-      unitType: "kg",
+      usedItem: "",
+      unit: "",
+      value: "",
       options: ["kg", "piece", "pack"],
+      howManyOptions: [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200,
+        300, 400, 500, 600, 700, 800, 900, 1000,
+      ],
       option1: false,
     };
   },
@@ -80,10 +123,11 @@ export default {
           "/api/v1/shopping-lists/" +
             this.route.params.id +
             "/items/" +
-            this.itemID,
-          { unit: this.unitType }
+            this.usedItem.id,
+          { value: this.value, unit: this.unit }
         );
         console.log(response);
+        this.$emit("rerenderEvent");
       } catch (error) {
         console.error("Error:", error);
       }
@@ -115,8 +159,27 @@ export default {
       }
     },
 
+    // DELETE
+    async del() {
+      try {
+        const response = await axios.delete(
+          "/api/v1/shopping-lists/" +
+            this.route.params.id +
+            "/items/" +
+            this.usedItem.id
+        );
+        console.log(response);
+        this.$emit("rerenderEvent");
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+
     // SHOW AND HIDE
-    showHide() {
+    showHide(valueType, unitType) {
+      this.value = valueType;
+      this.unit = unitType;
+
       this.option1 = !this.option1;
     },
   },
@@ -124,7 +187,71 @@ export default {
 </script>
 
 <style scoped>
+.homeLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.homeLink h3 {
+  flex: 1;
+  padding-left: 3rem;
+}
+.homeLink a {
+  position: absolute;
+  transform: translate(15%, -40%);
+  z-index: 1;
+}
+.homeLink a:hover {
+  background-color: rgba(50, 50, 50);
+}
+.homeLink img {
+  width: 2rem;
+}
+.deleteLink {
+  right: 1%;
+}
+.container ul {
+  width: 100%;
+  list-style: none;
+}
+.container li {
+  width: 100%;
+  padding: 1rem;
+}
+.container li:hover {
+  width: 100%;
+  background-color: rgba(50, 50, 50);
+}
+.container input {
+  margin-right: 2rem;
+}
 li span:hover {
   cursor: pointer;
+}
+.singleItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.unit {
+  padding: 0.5rem;
+  border-radius: 5px;
+  background: #035afc;
+}
+.dellItem {
+  font-weight: bold;
+  padding: 0 0.3rem;
+  border: 2px solid #035afc;
+  border-radius: 50%;
+}
+select {
+  font-size: 1.5rem;
+  margin: 2rem;
+  background: none;
+}
+option {
+  font-size: 1.5rem;
+  background: #202020;
 }
 </style>
