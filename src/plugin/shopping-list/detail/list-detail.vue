@@ -83,19 +83,21 @@ export default {
 
 <style lang="css" scoped>
 .container {
-  position: relative;
-  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 h1 {
   margin-bottom: 2rem;
 }
 .TheList {
-  width: 30%;
+  display: flex;
+  flex: 1;
 }
 .allItemContainer {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  /* width: 100%; */
+  flex: 2;
 }
 .allItemContainer a img {
   width: 2rem;

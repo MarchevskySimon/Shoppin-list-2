@@ -1,14 +1,13 @@
 <template id="template">
   <div>
-    <h1>Shoping List</h1>
     <main class="container">
       <div class="main-lists">
         <ListItem
           class="listItem"
           :key="componentKey"
           @rerender-items="$emit('sendRerender')"
+          @add-form="addForm = true"
         />
-        <span @click="addForm = true"><i>+</i> Add new</span>
       </div>
       <!-- FORM NA PRIDANIE  -->
       <div v-if="addForm" class="darker"></div>
@@ -34,6 +33,7 @@
 </template>
 
 <script>
+// import ListDetail from "@/plugin/shopping-list/detail/list-detail.vue";
 import ListItem from "@/plugin/shopping-list/list/_components/a-list-item.vue";
 import axios from "axios";
 
@@ -69,6 +69,15 @@ export default {
       }
     },
 
+    async selectListsItemsFromDatabase() {
+      try {
+        const response = axios.get("/api/v1/shopping-lists");
+        console.log(response);
+      } catch (error) {
+        console.error("Error :", error);
+      }
+    },
+
     async forceRerender() {
       this.componentKey += 1;
     },
@@ -89,6 +98,8 @@ export default {
 }
 .container {
   display: flex;
+  flex-direction: column;
+  flex: 1;
   background-color: #202020;
 }
 h1 {
@@ -97,6 +108,10 @@ h1 {
   padding: 1rem;
   background-color: #202020;
   box-shadow: 0px 5px 0px 0px rgba(15, 15, 15, 0.5);
+}
+h2 {
+  margin: 2rem 0 0 2rem;
+  color: #035afc;
 }
 h3 {
   font-size: 1.5rem;
@@ -109,7 +124,6 @@ h3 {
 .main-lists {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
 }
 .listItem {
   display: flex;
@@ -119,11 +133,14 @@ h3 {
   font-weight: bold;
 }
 .main-lists section {
-  margin-top: 2rem;
+  margin: 3rem 0 0 2rem;
 }
 .main-lists span {
   margin-top: 3rem;
   cursor: pointer;
+}
+.addPlus {
+  margin: 2rem;
 }
 .main-lists span i {
   font-style: normal;
@@ -135,6 +152,11 @@ h3 {
   border-radius: 50%;
 }
 
+.unit {
+  padding: 0.5rem;
+  border-radius: 5px;
+  background: #035afc;
+}
 /* FORM */
 .darker {
   position: fixed;

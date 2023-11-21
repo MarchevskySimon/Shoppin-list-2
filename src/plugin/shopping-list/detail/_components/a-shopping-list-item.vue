@@ -72,6 +72,10 @@
         </form>
       </div>
     </main>
+
+    <template v-if="!thisList">
+      <p>Načítavam dáta</p>
+    </template>
   </div>
 </template>
 
@@ -233,11 +237,6 @@ li span:hover {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-}
-.unit {
-  padding: 0.5rem;
-  border-radius: 5px;
-  background: #035afc;
 }
 .dellItem {
   font-weight: bold;
