@@ -2,12 +2,12 @@
   <div>
     <div class="homeLink">
       <RouterLink to="/">
-        <img src="../../../../../public/arrow.svg" alt="Arrow"
+        <img src="@/assets/arrow.svg" alt="Arrow"
       /></RouterLink>
       <h3>{{ thisList.title }}</h3>
-      <RouterLink to="/" @click="$emit('deleteList')" class="deleteLink"
-        ><img src="../../../../../public/trash.svg" alt="Delete"
-      /></RouterLink>
+      <a href="/" @click="$emit('deleteList')" class="deleteLink"
+        ><img src="@/assets/trash.svg" alt="Delete"
+      /></a>
     </div>
 
     <main class="container">
@@ -52,8 +52,8 @@
         <!-- Form to UNITS -->
         <form @submit.prevent="chooseUnit()">
           <div class="buttonsContainer">
-            <button class="button" type="submit">CONFIRM</button>
             <span class="button" @click="option1 = false">CANCEL</span>
+            <button class="button" type="submit">CONFIRM</button>
           </div>
           <select v-model="value">
             <option

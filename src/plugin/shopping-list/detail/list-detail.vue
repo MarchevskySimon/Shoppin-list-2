@@ -69,6 +69,7 @@ export default {
           "/api/v1/shopping-lists/" + this.route.params.id
         );
         console.log(response);
+        this.$emit("delRender");
       } catch (error) {
         console.error("Error:", error);
       }

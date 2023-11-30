@@ -7,17 +7,24 @@
           :key="componentKey"
           @rerender-items="$emit('sendRerender')"
           @add-form="addForm = true"
+          @del-render="forceRerender()"
         />
       </div>
       <!-- FORM NA PRIDANIE  -->
       <div v-if="addForm" class="darker"></div>
-      <form v-if="addForm" class="hidenForm" @submit.prevent="addToDatabase()">
+      <form
+        v-if="addForm"
+        class="hidenForm"
+        @submit.prevent="
+          addToDatabase();
+          forceRerender();
+        "
+      >
         <h2>Enter list name</h2>
         <p v-if="message">Please enter your text !</p>
         <input type="text" v-model="titleName" placeholder="Name" />
         <br />
         <div class="buttonsContainer">
-          <button class="button" type="submit">CREATE</button>
           <span
             class="button"
             @click="
@@ -26,6 +33,7 @@
             "
             >CANCEL</span
           >
+          <button class="button" type="submit">CREATE</button>
         </div>
       </form>
     </main>

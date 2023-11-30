@@ -16,11 +16,11 @@
         <p>Načítavam dáta</p>
       </template>
 
-      <!--<template v-else-if="shoppingLists.error">
-      Pri načítaní dát nastala chyba: {{ shoppingLists.error }}
-    </template>
+      <template v-else-if="shoppingLists.error">
+        Pri načítaní dát nastala chyba: {{ shoppingLists.error }}
+      </template>
 
-    <template v-else>
+      <!-- <template v-else>
       Počet položiek v zozname: {{ shoppingLists.length }}
     </template> -->
     </main>
@@ -31,7 +31,9 @@
           <h2>{{ list.title }}</h2>
           <ul>
             <li v-for="item in list.items" :key="item.id">
-              <span>{{ item.name }}</span>
+              <span :class="{ cross: item.is_checked === true }">{{
+                item.name
+              }}</span>
               <span class="unit">{{ item.value + " " + item.unit }}</span>
             </li>
           </ul>
@@ -70,6 +72,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.cross {
+  text-decoration: line-through;
+}
 .all {
   display: flex;
   flex-direction: row;
